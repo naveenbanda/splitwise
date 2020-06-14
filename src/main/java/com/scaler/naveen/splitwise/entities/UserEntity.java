@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.scaler.naveen.splitwise.constants.TableName;
 import com.scaler.naveen.splitwise.enums.UserStatus;
 import com.scaler.naveen.splitwise.models.expense.Expense;
+import com.scaler.naveen.splitwise.models.user.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -36,6 +37,13 @@ public class UserEntity extends BaseEntity{
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        setStatus(UserStatus.ACTIVE.code());
+    }
+
+    public UserEntity(User user) {
+        setName(user.getName());
+        setEmail(user.getEmail());
+        setPhoneNumber(user.getPhoneNumber());
         setStatus(UserStatus.ACTIVE.code());
     }
 

@@ -38,7 +38,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {TestApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WebAppConfiguration
 public abstract class AbstractTest {
 

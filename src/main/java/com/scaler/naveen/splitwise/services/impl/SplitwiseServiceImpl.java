@@ -1,4 +1,60 @@
 package com.scaler.naveen.splitwise.services.impl;
 
-public class SplitwiseServiceImpl {
+import com.scaler.naveen.splitwise.entities.UserEntity;
+import com.scaler.naveen.splitwise.exceptions.UserAlreadyExistException;
+import com.scaler.naveen.splitwise.exceptions.UserNotFoundException;
+import com.scaler.naveen.splitwise.models.bookkeeper.PassBook;
+import com.scaler.naveen.splitwise.models.expense.Expense;
+import com.scaler.naveen.splitwise.models.expense.ExpenseDetails;
+import com.scaler.naveen.splitwise.models.user.User;
+import com.scaler.naveen.splitwise.models.user.UserDetails;
+import com.scaler.naveen.splitwise.repositories.UserRepository;
+import com.scaler.naveen.splitwise.services.SplitwiseService;
+import com.scaler.naveen.splitwise.utils.EntityModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class SplitwiseServiceImpl implements SplitwiseService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public UserDetails addUser(User user) throws UserAlreadyExistException {
+        Optional<UserEntity> userEntity = userRepository.findByPhoneNumber(user.getPhoneNumber());
+        if (userEntity.isPresent()) {
+            throw new UserAlreadyExistException(user.getPhoneNumber());
+        }
+        UserEntity newUserEntity = new UserEntity(user);
+        return EntityModelMapper.map(newUserEntity, new ArrayList<>());
+    }
+
+    public UserDetails getUserDetails(Long userId) throws UserNotFoundException {
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if (!userEntity.isPresent()) {
+            throw new UserNotFoundException(userId);
+        } else {
+            return  EntityModelMapper.map(userEntity.get(), getPassbook(userId));
+        }
+    }
+
+    public ExpenseDetails addExpense(Expense expense) {
+        return null;
+    }
+
+    public ExpenseDetails updateExpense(Expense expense) {
+        return null;
+    }
+
+    private List<PassBook> getPassbook(Long userId) {
+        return null;
+    }
 }
