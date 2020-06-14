@@ -3,12 +3,12 @@ package com.scaler.naveen.splitwise.enums;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public enum Category {
-    EQUAL(1), PERCENT(2), EXACT_AMOUNT(3);
+public enum UserStatus {
+    INACTIVE(1), ACTIVE(2);
 
     private int value;
 
-    Category(int code) {
+    UserStatus(int code) {
         value = code;
     }
 
@@ -16,11 +16,11 @@ public enum Category {
         return value;
     }
 
-    public static Optional<Category> fromCode(int code) {
+    public static Optional<UserStatus> fromCode(int code) {
         return Stream.of(values()).filter(x -> x.code() == code).findFirst();
     }
 
-    public boolean is(Category status) {
+    public boolean is(UserStatus status) {
         return value == status.value;
     }
 }

@@ -1,33 +1,17 @@
 package com.scaler.naveen.splitwise.models.user;
 
-import com.scaler.naveen.splitwise.models.expense.Expense;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
-@Setter
+@Data
 public class User {
-    private static long NEW_UID = 0;
-
-    private long uId;
     private String name;
     private String email;
     private String phoneNumber;
-    private List<Expense> expenses;
 
-    public User (String name, String phoneNumber, String email) {
-        setUId();
-        setName(name);
-        setEmail(email);
-        setPhoneNumber(phoneNumber);
-        setExpenses(new ArrayList<>());
-    }
-
-    public void setUId() {
-        this.setUId(NEW_UID++);
+    public User(String name, String email, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
 }

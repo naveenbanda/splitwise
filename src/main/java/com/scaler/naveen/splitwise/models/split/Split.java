@@ -1,27 +1,16 @@
 package com.scaler.naveen.splitwise.models.split;
 
-import com.scaler.naveen.splitwise.models.user.User;
-import lombok.Getter;
-import lombok.Setter;
+import com.scaler.naveen.splitwise.enums.SplitStatus;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-public abstract class Split {
-    private static long NEW_UID = 0;
-
-    private User user;
-    private BigDecimal amount;
+@Data
+public class Split {
+    public Long id;
+    private Long userId;
+    private BigDecimal amountShare;
+    private BigDecimal percentageShare;
     private String note;
-    private long uId;
-
-    public Split(User user) {
-        setUser(user);
-        setUId();
-    }
-
-    private void setUId() {
-        this.setUId(NEW_UID++);
-    }
+    private SplitStatus splitStatus;
 }
