@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.scaler.naveen.splitwise.controllers.Controller;
 import com.scaler.naveen.splitwise.enums.Category;
 import com.scaler.naveen.splitwise.enums.SplitStatus;
 import com.scaler.naveen.splitwise.models.expense.Expense;
@@ -14,53 +13,23 @@ import com.scaler.naveen.splitwise.models.split.Split;
 import com.scaler.naveen.splitwise.models.user.User;
 import com.scaler.naveen.splitwise.models.user.UserDetails;
 import com.scaler.naveen.splitwise.utils.Util;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {TestApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@WebAppConfiguration
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public abstract class AbstractTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
     protected static final int SCALE = 2;
     protected static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
-
-    protected MockMvc mvc;
-
-    @LocalServerPort
-    protected int port;
-
-    protected URL base;
-
-    @Autowired
-    protected WebApplicationContext webApplicationContext;
-
-    @Before
-    public void setUp() throws MalformedURLException {
-        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        base = new URL("http://localhost:" + port + "/splitwise/");
-    }
 
     protected String mapToJson(Object obj) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();

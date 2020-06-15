@@ -23,4 +23,8 @@ public class UserDetails {
         this.passBooks = passBooks;
     }
 
+    public UserDetails() {
+
+    }
+
 }
