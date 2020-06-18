@@ -69,6 +69,9 @@ public abstract class AbstractTest {
 
         switch (category) {
             case EQUAL:
+                for (int i=0; i<usersInExpense.size(); i++) {
+                    splits.put(usersInExpense.get(i), BigDecimal.ZERO);
+                }
                 return splits;
             case EXACT_AMOUNT:
                 BigDecimal[] shareAmount = new BigDecimal[usersInExpense.size()];

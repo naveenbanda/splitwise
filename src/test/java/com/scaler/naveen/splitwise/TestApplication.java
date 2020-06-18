@@ -1,5 +1,8 @@
 package com.scaler.naveen.splitwise;
 
+import com.scaler.naveen.splitwise.enums.Category;
+import com.scaler.naveen.splitwise.models.expense.Expense;
+import com.scaler.naveen.splitwise.models.expense.ExpenseDetails;
 import com.scaler.naveen.splitwise.models.user.User;
 import com.scaler.naveen.splitwise.models.user.UserDetails;
 import org.junit.Before;
@@ -15,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -57,24 +62,20 @@ public class TestApplication extends AbstractTest{
         checkUserWithUserDetails(user3, userDetails3);
 
 
-//
-//
-//        uri = base.toString()+"add-expense";
-//        List<Long> usersInExpense = new ArrayList<>();
-//        usersInExpense.add(userDetails1.getId());
-//        usersInExpense.add(userDetails2.getId());
-//        usersInExpense.add(userDetails3.getId());
-//
-//        Expense expense1 = getRandomExpense(Category.EQUAL, userDetails1.getId(), usersInExpense);
-//        LOGGER.info("Expense1: " + expense1);
-//        mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
-//                .contentType(MediaType.APPLICATION_JSON_VALUE).content(mapToJson(expense1))).andReturn();
-//        status = mvcResult.getResponse().getStatus();
-//        assertEquals(200, status);
-//        ExpenseDetails expenseDetails1 = mapFromJson(mvcResult.getResponse().getContentAsString(), ExpenseDetails.class);
-//        LOGGER.info("ExpenseDetails1: " + expenseDetails1);
-//
-//        checkExpenseWithExpenseDetails(expense1, expenseDetails1);
+
+
+        uri = base.toString()+"add-expense";
+        List<Long> usersInExpense = new ArrayList<>();
+        usersInExpense.add(userDetails1.getId());
+        usersInExpense.add(userDetails2.getId());
+        usersInExpense.add(userDetails3.getId());
+
+        Expense expense1 = getRandomExpense(Category.EQUAL, userDetails1.getId(), usersInExpense);
+        LOGGER.info("Expense1: " + expense1);
+        ExpenseDetails expenseDetails1 = this.restTemplate.postForEntity(uri, expense1, ExpenseDetails.class).getBody();
+        LOGGER.info("ExpenseDetails1: " + expenseDetails1);
+
+        checkExpenseWithExpenseDetails(expense1, expenseDetails1);
 
 
     }

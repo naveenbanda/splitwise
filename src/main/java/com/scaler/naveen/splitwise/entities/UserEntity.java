@@ -34,6 +34,7 @@ public class UserEntity extends BaseEntity{
     private String phoneNumber;
 
     public UserEntity(String name, String email, String phoneNumber) {
+        super();
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -41,6 +42,7 @@ public class UserEntity extends BaseEntity{
     }
 
     public UserEntity(User user) {
+        super();
         setName(user.getName());
         setEmail(user.getEmail());
         setPhoneNumber(user.getPhoneNumber());

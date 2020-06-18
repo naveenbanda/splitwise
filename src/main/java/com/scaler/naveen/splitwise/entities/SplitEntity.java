@@ -2,6 +2,7 @@ package com.scaler.naveen.splitwise.entities;
 
 import com.scaler.naveen.splitwise.constants.TableName;
 import com.scaler.naveen.splitwise.enums.SplitStatus;
+import com.scaler.naveen.splitwise.models.expense.Expense;
 import com.scaler.naveen.splitwise.models.user.User;
 import lombok.Data;
 
@@ -19,8 +20,8 @@ public class SplitEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "amount")
-    private BigDecimal amount;
+    @Column(name = "amount_share")
+    private BigDecimal amountShare;
 
     @Column(name = "name")
     private String note;
@@ -30,10 +31,18 @@ public class SplitEntity extends BaseEntity {
 
     public SplitEntity(Long userId, BigDecimal amount, String note, Long expenseId) {
         this.userId = userId;
-        this.amount = amount;
+        this.amountShare = amount;
         this.note = note;
         this.expenseId = expenseId;
         setStatus(SplitStatus.UNPAID.code());
+    }
+
+    public SplitEntity(Long userId, BigDecimal amount, String note, Long expenseId, SplitStatus splitStatus) {
+        this.userId = userId;
+        this.amountShare = amount;
+        this.note = note;
+        this.expenseId = expenseId;
+        setStatus(splitStatus.code());
     }
 
 }

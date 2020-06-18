@@ -3,6 +3,7 @@ package com.scaler.naveen.splitwise.models.expense;
 import com.scaler.naveen.splitwise.enums.Category;
 import com.scaler.naveen.splitwise.models.split.Split;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class ExpenseDetails {
     protected static final int SCALE = 2;
     protected static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
