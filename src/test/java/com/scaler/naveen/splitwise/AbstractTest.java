@@ -105,34 +105,49 @@ public abstract class AbstractTest {
     }
 
     public void checkUserWithUserDetails(User user, UserDetails userDetails) {
-        assertEquals(user.getName(), userDetails.getName());
-        assertEquals(user.getEmail(), userDetails.getEmail());
-        assertEquals(user.getPhoneNumber(), userDetails.getPhoneNumber());
+        try {
+            assertEquals(user.getName(), userDetails.getName());
+            assertEquals(user.getEmail(), userDetails.getEmail());
+            assertEquals(user.getPhoneNumber(), userDetails.getPhoneNumber());
+        } catch (Exception e) {
+            LOGGER.error(e.getLocalizedMessage(), e.getStackTrace());
+        }
     }
 
     public void checkExpenseWithExpenseDetails(Expense expense, ExpenseDetails expenseDetails) {
+        try {
+            assertEquals(expense.getDescription(), expenseDetails.getDescription());
+            assertEquals(expense.getExpenseDate(), expenseDetails.getExpenseDate());
+            assertEquals(expense.getPaidBy(), expenseDetails.getPaidBy());
+            assertEquals(expense.getCategory(), expenseDetails.getCategory());
+            assertEquals(expense.getTotalAmount(), expenseDetails.getTotalAmount());
+            assertEquals(expense.getAddedBy(), expenseDetails.getAddedBy());
 
-        assertEquals(expense.getDescription(), expenseDetails.getDescription());
-        assertEquals(expense.getExpenseDate(), expenseDetails.getExpenseDate());
-        assertEquals(expense.getPaidBy(), expenseDetails.getPaidBy());
-        assertEquals(expense.getCategory(), expenseDetails.getCategory());
-        assertEquals(expense.getTotalAmount(), expenseDetails.getTotalAmount());
-        assertEquals(expense.getAddedBy(), expenseDetails.getAddedBy());
+            Map<Long, BigDecimal> splits = expense.getSplits();
+            List<Split> expenseSplits = expenseDetails.getSplits();
+            assertEquals(splits.size(), expenseSplits.size());
+            Optional<Split> splitOfPaidBy = expenseSplits.stream().filter(split -> (split.getUserId().compareTo(expense.getPaidBy()) == 0)).findAny();
+            assertTrue(splitOfPaidBy.isPresent());
+            assertTrue(splitOfPaidBy.get().getSplitStatus().is(SplitStatus.PAID));
 
-        Map<Long, BigDecimal> splits = expense.getSplits();
-        List<Split> expenseSplits = expenseDetails.getSplits();
-        assertEquals(splits.size(), expenseSplits.size());
-        Optional<Split> splitOfPaidBy = expenseSplits.stream().filter(split -> (split.getUserId().compareTo(expense.getPaidBy()) == 0)).findAny();
-        assertTrue(splitOfPaidBy.isPresent());
-        assertTrue(splitOfPaidBy.get().getSplitStatus().is(SplitStatus.PAID));
-
-        if (expense.getCategory().is(Category.EQUAL)) {
-            BigDecimal shareAmount = expense.getTotalAmount().divide(BigDecimal.valueOf(expense.getSplits().size()), SCALE, ROUNDING_MODE);
-            for (Split split: expenseDetails.getSplits()) {
-                assertTrue(Util.isApproxEqual(split.getAmountShare(), shareAmount));
+            switch (expense.getCategory()) {
+                case EQUAL:
+                    BigDecimal shareAmount = expense.getTotalAmount().divide(BigDecimal.valueOf(expense.getSplits().size()), SCALE, ROUNDING_MODE);
+                    for (Split split : expenseDetails.getSplits()) {
+                        assertTrue(Util.isApproxEqual(split.getAmountShare(), shareAmount));
+                    }
+                    break;
+                case EXACT_AMOUNT:
+                    for (Split split : expenseDetails.getSplits()) {
+                        assertTrue(Util.isApproxEqual(split.getAmountShare(), expense.getSplits().get(split.getUserId())));
+                    }
+                    break;
+                default:
+                    throw new RuntimeException(String.format("Category %s not handled", expense.getCategory()));
             }
+        } catch (Exception e) {
+            LOGGER.error(e.getLocalizedMessage(), e.getStackTrace());
         }
-
     }
 
 }

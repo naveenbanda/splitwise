@@ -77,6 +77,12 @@ public class TestApplication extends AbstractTest{
 
         checkExpenseWithExpenseDetails(expense1, expenseDetails1);
 
+        Expense expense2 = getRandomExpense(Category.EXACT_AMOUNT, userDetails2.getId(), usersInExpense);
+        LOGGER.info("Expense2: " + expense2);
+        ExpenseDetails expenseDetails2 = this.restTemplate.postForEntity(uri, expense2, ExpenseDetails.class).getBody();
+        LOGGER.info("ExpenseDetails2: " + expenseDetails2);
+
+        checkExpenseWithExpenseDetails(expense2, expenseDetails2);
 
     }
 
