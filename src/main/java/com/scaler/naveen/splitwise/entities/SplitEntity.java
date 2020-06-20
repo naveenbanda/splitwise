@@ -5,6 +5,7 @@ import com.scaler.naveen.splitwise.enums.SplitStatus;
 import com.scaler.naveen.splitwise.models.expense.Expense;
 import com.scaler.naveen.splitwise.models.user.User;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = TableName.SPLIT)
+@NoArgsConstructor
 public class SplitEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,19 +32,19 @@ public class SplitEntity extends BaseEntity {
     private Long expenseId;
 
     public SplitEntity(Long userId, BigDecimal amount, String note, Long expenseId) {
+        super(SplitStatus.UNPAID.code());
         this.userId = userId;
         this.amountShare = amount;
         this.note = note;
         this.expenseId = expenseId;
-        setStatus(SplitStatus.UNPAID.code());
     }
 
     public SplitEntity(Long userId, BigDecimal amount, String note, Long expenseId, SplitStatus splitStatus) {
+        super(splitStatus.code());
         this.userId = userId;
         this.amountShare = amount;
         this.note = note;
         this.expenseId = expenseId;
-        setStatus(splitStatus.code());
     }
 
 }

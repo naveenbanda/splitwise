@@ -13,6 +13,7 @@ import com.scaler.naveen.splitwise.models.split.Split;
 import com.scaler.naveen.splitwise.models.user.User;
 import com.scaler.naveen.splitwise.models.user.UserDetails;
 import com.scaler.naveen.splitwise.utils.Util;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +26,9 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Slf4j
 public abstract class AbstractTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTest.class);
     protected static final int SCALE = 2;
     protected static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
 
@@ -47,7 +48,8 @@ public abstract class AbstractTest {
             User user = new User(faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.phoneNumber().phoneNumber());
             return user;
         } catch (Exception e) {
-           throw e;
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -59,7 +61,8 @@ public abstract class AbstractTest {
             Expense expense = new Expense(faker.witcher().quote(), LocalDateTime.now(), uId, category, amount, uId, splits);
             return expense;
         } catch (Exception e) {
-            throw e;
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -110,7 +113,7 @@ public abstract class AbstractTest {
             assertEquals(user.getEmail(), userDetails.getEmail());
             assertEquals(user.getPhoneNumber(), userDetails.getPhoneNumber());
         } catch (Exception e) {
-            LOGGER.error(e.getLocalizedMessage(), e.getStackTrace());
+            e.printStackTrace();
         }
     }
 
@@ -146,7 +149,7 @@ public abstract class AbstractTest {
                     throw new RuntimeException(String.format("Category %s not handled", expense.getCategory()));
             }
         } catch (Exception e) {
-            LOGGER.error(e.getLocalizedMessage(), e.getStackTrace());
+            e.printStackTrace();
         }
     }
 

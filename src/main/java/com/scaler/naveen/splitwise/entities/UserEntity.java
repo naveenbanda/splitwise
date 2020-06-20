@@ -8,6 +8,7 @@ import com.scaler.naveen.splitwise.enums.UserStatus;
 import com.scaler.naveen.splitwise.models.expense.Expense;
 import com.scaler.naveen.splitwise.models.user.User;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = TableName.USER)
+@NoArgsConstructor
 public class UserEntity extends BaseEntity{
 
     @Id

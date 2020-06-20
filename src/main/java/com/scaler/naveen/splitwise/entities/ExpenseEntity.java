@@ -6,6 +6,7 @@ import com.scaler.naveen.splitwise.enums.ExpenseStatus;
 import com.scaler.naveen.splitwise.models.expense.Expense;
 import com.scaler.naveen.splitwise.models.user.User;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = TableName.EXPENSE)
+@NoArgsConstructor
 public class ExpenseEntity extends BaseEntity {
 
     @Id
@@ -40,22 +42,22 @@ public class ExpenseEntity extends BaseEntity {
     private BigDecimal totalAmount;
 
     public ExpenseEntity(String description, LocalDateTime expenseDate, Long paidBy, Long addedBy, Category category, BigDecimal totalAmount) {
+        super(ExpenseStatus.UNSETTLED.code());
         this.description = description;
         this.expenseDate = expenseDate;
         this.paidBy = paidBy;
         this.addedBy = addedBy;
         this.category = category;
         this.totalAmount = totalAmount;
-        setStatus(ExpenseStatus.UNSETTLED.code());
     }
 
     public ExpenseEntity(Expense expense) {
+        super(ExpenseStatus.UNSETTLED.code());
         this.description = expense.getDescription();
         this.expenseDate = expense.getExpenseDate();
         this.paidBy = expense.getPaidBy();
         this.addedBy = expense.getAddedBy();
         this.category = expense.getCategory();
         this.totalAmount = expense.getTotalAmount();
-        setStatus(ExpenseStatus.UNSETTLED.code());
     }
 }

@@ -6,6 +6,8 @@ import com.scaler.naveen.splitwise.core.BookKeeperRegistry;
 import com.scaler.naveen.splitwise.entities.ExpenseEntity;
 import com.scaler.naveen.splitwise.entities.SplitEntity;
 import com.scaler.naveen.splitwise.entities.UserEntity;
+import com.scaler.naveen.splitwise.enums.PassBookStatus;
+import com.scaler.naveen.splitwise.enums.SplitStatus;
 import com.scaler.naveen.splitwise.exceptions.UserAlreadyExistException;
 import com.scaler.naveen.splitwise.exceptions.UserNotFoundException;
 import com.scaler.naveen.splitwise.models.bookkeeper.PassBook;
@@ -19,6 +21,7 @@ import com.scaler.naveen.splitwise.repositories.SplitRepository;
 import com.scaler.naveen.splitwise.repositories.UserRepository;
 import com.scaler.naveen.splitwise.services.SplitwiseService;
 import com.scaler.naveen.splitwise.utils.EntityModelMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class SplitwiseServiceImpl implements SplitwiseService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SplitwiseServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -52,7 +55,7 @@ public class SplitwiseServiceImpl implements SplitwiseService {
         }
         UserEntity newUserEntity = userRepository.save(new UserEntity(user));
 
-        LOGGER.info("UserEntity: " + newUserEntity);
+        log.info("UserEntity: " + newUserEntity);
         return EntityModelMapper.map(newUserEntity, new ArrayList<>());
     }
 
@@ -61,7 +64,7 @@ public class SplitwiseServiceImpl implements SplitwiseService {
         if (!userEntity.isPresent()) {
             throw new UserNotFoundException(userId);
         } else {
-            LOGGER.info("UserEntity: " + userEntity.get());
+            log.info("UserEntity: " + userEntity.get());
             return  EntityModelMapper.map(userEntity.get(), getPassbook(userId));
         }
     }
@@ -80,6 +83,17 @@ public class SplitwiseServiceImpl implements SplitwiseService {
     }
 
     private List<PassBook> getPassbook(Long userId) {
-        return null;
+        List<SplitEntity> splitRepositoryAllByUserId = splitRepository.getAllByUserId(userId);
+        List<PassBook> passBookList = new ArrayList<>();
+        for (SplitEntity splitEntity: splitRepositoryAllByUserId) {
+            if (splitEntity.getSplitStatus().is(SplitStatus.UNPAID)) {
+                Long uId = expenseRepository.getById(splitEntity.getExpenseId()).getPaidBy();
+                PassBookStatus passBookStatus = PassBookStatus.NEGATIVE;
+                if (uId.compareTo(userId) == 0)
+                    passBookStatus = PassBookStatus.POSITIVE;
+                passBookList.add(new PassBook(uId, splitEntity.getId(), splitEntity.getAmountShare(), passBookStatus));
+            }
+        }
+        return passBookList;
     }
 }
